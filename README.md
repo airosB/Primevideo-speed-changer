@@ -1,6 +1,7 @@
 # Primevideo-speed-changer
 Chrome拡張機能。
-PrimeVideoで Video Speed Controller を使うと動画が真っ黒になって見れないので、それの対策。
+
+PrimeVideoで Video Speed Controller を使うと動画が真っ黒になって見れないので、それの対策。とりあえず動くが、現在の速度を表示するUIは出ない。
 
 適当物体なのでストア公開はしない。
 
