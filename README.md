@@ -1,12 +1,12 @@
-# Nicovideo-speed-changer
-Chrome拡張機能。ニコニコ動画を無料会員でも高速視聴できるようにするためのもの。
-ニコニコ動画では Video Speed Controller が中途半端にしか効かないので、それの対策。
+# Primevideo-speed-changer
+Chrome拡張機能。
+PrimeVideoで Video Speed Controller を使うと動画が真っ黒になって見れないので、それの対策。
 
-有料機能を無料会員で実現するものなのでストア公開はしない。
+適当物体なのでストア公開はしない。
 
 ## 使い方
 Video Speed Controller 拡張機能と同じキーアサインになっている。
-同拡張と同時インストールする場合、ニコ動のドメインは Video Speed Controller の除外対象に設定しておくこと。
+同拡張と同時インストールする場合、PrimeVideoのURL `www.amazon.co.jp/gp/video` を Video Speed Controller の除外対象に設定しておくこと。
 
 - `D` 速度増加
 - `S` 速度減少
