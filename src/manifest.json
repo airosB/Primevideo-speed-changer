@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Primevideo Speed Changer",
+  "description": "PrimeVideoでも高速視聴できるようにする",
+  "version": "0.9.0",
+  "icons": {
+    "128": "icon128.png",
+    "48": "icon48.png",
+    "16": "icon16.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.amazon.co.jp/gp/video/*"],
+      "js": ["main.js"],
+      "all_frames": true
+    }
+  ]
+}
