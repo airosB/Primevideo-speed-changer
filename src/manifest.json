@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.amazon.co.jp/gp/video/*"],
+      "matches": ["https://www.amazon.co.jp/*"],
       "js": ["main.js"],
       "all_frames": true
     }
