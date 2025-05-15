@@ -7,7 +7,7 @@ PrimeVideoで Video Speed Controller を使うと動画が真っ黒になって�
 
 ## 使い方
 Video Speed Controller 拡張機能と同じキーアサインになっている。
-同拡張と同時インストールする場合、PrimeVideoのURL `www.amazon.co.jp/gp/video` を Video Speed Controller の除外対象に設定しておくこと。
+同拡張と同時インストールする場合、PrimeVideoのURL `www.amazon.co.jp` を Video Speed Controller の除外対象に設定しておくこと。
 
 - `D` 速度増加
 - `S` 速度減少
