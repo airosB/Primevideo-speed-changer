@@ -53,10 +53,10 @@ const registerShortcutKeys = () => {
     window.addEventListener('keydown', (e) => {
         if (e.key === 's') {
             playbackRate = _round2(Math.max(0.1, playbackRate - rateChangeStep))
-            e.preventDefault()
+            // e.preventDefault()
         } else if (e.key === 'd') {
             playbackRate = _round2(Math.min(16, playbackRate + rateChangeStep))
-            e.preventDefault()
+            // e.preventDefault()
         } else if (e.key === 'r') {
             if (playbackRate !== 1) {
                 prevRate = _round2(playbackRate)
@@ -66,9 +66,9 @@ const registerShortcutKeys = () => {
             }
 
             // ctrl+r のリロードのみ貫通させる
-            if (!e.ctrlKey) {
-                e.preventDefault()
-            }
+            // if (!e.ctrlKey) {
+            //     e.preventDefault()
+            // }
         }
     }, true)
 }
