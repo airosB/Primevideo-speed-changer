@@ -10,20 +10,19 @@ let playbackRate = 1.3 // デフォルト値としても作用する
  * @type {string}
  */
 const controllerHtml = `
-    <div class="nvsc-controller" style="top:0px; left:0px; position:relative; opacity:0.6; font-size:10px; z-index:10; color:white;">
+    <div class="nvsc-controller" style="top:0px; left:0px; position:absolute; opacity:0.6; font-size:10px; z-index:10; color:white;">
         <span class="nvsc-current-rate">${playbackRate}</span>
     </div>
 `
 
 /**
  * コントローラーを表示
+ * 不具合が多いので呼ばない
  */
 const displayControl = (videos) => {
     videos.forEach((video) => {
-        // これやると画面が真っ暗になる
-        // video.insertAdjacentHTML('beforebegin', controllerHtml);
-        // これやるとマウスコントロール効かなくなる
-        // video.insertAdjacentHTML('afterend', controllerHtml);
+        const videoContainer = video.parentElement.parentElement
+        videoContainer.insertAdjacentHTML('beforebegin', controllerHtml);
     })
 
     const speedMeters = document.querySelectorAll('.nvsc-current-rate')
@@ -51,10 +50,10 @@ const applyVideoSpeed = (videos) => {
 const registerShortcutKeys = () => {
     let prevRate
     window.addEventListener('keydown', (e) => {
-        if (e.key === 's') {
+        if (e.key === 'w') {
             playbackRate = _round2(Math.max(0.1, playbackRate - rateChangeStep))
             // e.preventDefault()
-        } else if (e.key === 'd') {
+        } else if (e.key === 'e') {
             playbackRate = _round2(Math.min(16, playbackRate + rateChangeStep))
             // e.preventDefault()
         } else if (e.key === 'r') {
@@ -104,6 +103,6 @@ const fireWhenLoad = () => {
     const videos = document.querySelectorAll('video')
     displayControl(videos)
     applyVideoSpeed(videos)
+    registerShortcutKeys()
 }
 setTimeout(fireWhenLoad, 2000)
-registerShortcutKeys()
