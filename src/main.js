@@ -1,61 +1,54 @@
-/**
- * 各種設定値
- */
 const refreshRateMilliSecond = 50
 const rateChangeStep = 0.1
-let playbackRate = 1.3 // デフォルト値としても作用する
+let playbackRate = 1.3
 
-/**
- * 再生速度コントローラーのHTML
- * @type {string}
- */
-const controllerHtml = `
-    <div class="nvsc-controller" style="top:0px; left:0px; position:absolute; opacity:0.6; font-size:10px; z-index:10; color:white;">
-        <span class="nvsc-current-rate">${playbackRate}</span>
-    </div>
-`
+// キーリスナーの重複登録を防ぐフラグ
+let shortcutRegistered = false
 
-/**
- * コントローラーを表示
- * 不具合が多いので呼ばない
- */
-const displayControl = (videos) => {
-    videos.forEach((video) => {
-        const videoContainer = video.parentElement.parentElement
-        videoContainer.insertAdjacentHTML('beforebegin', controllerHtml);
+// 速度表示オーバーレイ
+let speedDisplay = null
+
+const createSpeedDisplay = () => {
+    const el = document.createElement('div')
+    el.style.cssText = `
+        position: fixed;
+        top: 8px;
+        left: 8px;
+        z-index: 2147483647;
+        padding: 2px 7px;
+        background: black;
+        color: white;
+        font-size: 12px;
+        font-family: monospace;
+        border-radius: 5px;
+        opacity: 0.6;
+        pointer-events: none;
+        line-height: 1.6;
+    `
+    document.body.appendChild(el)
+    return el
+}
+
+// インターバルごとにDOMを参照し直す（video要素の差し替えに対応）
+const applyVideoSpeed = () => {
+    document.querySelectorAll('video').forEach((video) => {
+        video.playbackRate = playbackRate
     })
-
-    const speedMeters = document.querySelectorAll('.nvsc-current-rate')
-    setInterval(() => {
-        speedMeters.forEach((meter) => {
-            meter.innerText = _numberFormat(playbackRate)
-        })
-    }, 50)
+    if (speedDisplay) {
+        speedDisplay.textContent = `${playbackRate.toFixed(1)}x`
+    }
 }
 
-/**
- * 全てのVideoに速度変更を適用
- */
-const applyVideoSpeed = (videos) => {
-    setInterval(() => {
-        videos.forEach((video) => {
-            video.playbackRate = playbackRate
-        })
-    }, refreshRateMilliSecond)
-}
-
-/**
- * ショートカットキーのイベント登録
- */
 const registerShortcutKeys = () => {
+    if (shortcutRegistered) return
+    shortcutRegistered = true
+
     let prevRate
     window.addEventListener('keydown', (e) => {
         if (e.key === 'w') {
             playbackRate = _round2(Math.max(0.1, playbackRate - rateChangeStep))
-            // e.preventDefault()
         } else if (e.key === 'e') {
             playbackRate = _round2(Math.min(16, playbackRate + rateChangeStep))
-            // e.preventDefault()
         } else if (e.key === 'r') {
             if (playbackRate !== 1) {
                 prevRate = _round2(playbackRate)
@@ -63,46 +56,42 @@ const registerShortcutKeys = () => {
             } else {
                 playbackRate = _round2(prevRate)
             }
-
-            // ctrl+r のリロードのみ貫通させる
-            // if (!e.ctrlKey) {
-            //     e.preventDefault()
-            // }
         }
     }, true)
 }
 
-/**
- * 0.1単位で丸める
- * @param number
- * @returns {number}
- * @private
- */
 const _round2 = (number) => {
     return Math.round(number * 10) / 10
 }
 
-/**
- * 0.1刻みの数値フォーマット
- * @param number
- * @returns {`${string}.0`|string}
- * @private
- */
-const _numberFormat = (number) => {
-    if (number % 1 === 0) {
-        return `${number}.0`
-    } else {
-        return `${number}`
+// video要素が出現してから起動する。タイムアウト固定では間に合わないことがあるため。
+const init = () => {
+    const start = () => {
+        speedDisplay = createSpeedDisplay()
+        setInterval(applyVideoSpeed, refreshRateMilliSecond)
+        registerShortcutKeys()
     }
+
+    if (document.querySelectorAll('video').length > 0) {
+        start()
+        return
+    }
+
+    const observer = new MutationObserver(() => {
+        if (document.querySelectorAll('video').length > 0) {
+            observer.disconnect()
+            start()
+        }
+    })
+
+    observer.observe(document.body || document.documentElement, {
+        childList: true,
+        subtree: true,
+    })
 }
 
-/**
- * なんとなくロード後に発火させる
- */
-const fireWhenLoad = () => {
-    const videos = document.querySelectorAll('video')
-    displayControl(videos)
-    applyVideoSpeed(videos)
-    registerShortcutKeys()
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init)
+} else {
+    init()
 }
-setTimeout(fireWhenLoad, 2000)
